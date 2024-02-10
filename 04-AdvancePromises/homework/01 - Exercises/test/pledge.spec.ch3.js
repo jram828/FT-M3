@@ -42,7 +42,7 @@ describe('Otra promise', function(){
 
   describe('que todavía no es rechazada', function(){
 
-    xit('no llama a los errors handlers aún', function(){
+    it('no llama a los errors handlers aún', function(){
       promiseForThing.then( null, logOops );
       expect( logOops ).not.toHaveBeenCalled();
     });
@@ -67,17 +67,17 @@ describe('Otra promise', function(){
       expect( logOops ).not.toHaveBeenCalled();
     });
 
-    xit('llama un error handler agregado por `.then`', function(){
+    it('llama un error handler agregado por `.then`', function(){
       promiseForThing.then( null, logOops );
       expect( logOops ).toHaveBeenCalled();
     });
 
-    xit("llama un error handler pasando el valor de la promesa", function(){
+    it("llama un error handler pasando el valor de la promesa", function(){
       promiseForThing.then( null, logInput );
       expect( logInput ).toHaveBeenCalledWith( theReason );
     });
 
-    xit('llama una vez cada error handler adjuntado', function(){
+    it('llama una vez cada error handler adjuntado', function(){
       promiseForThing.then( null, logOops );
       promiseForThing.then( null, logInput );
       promiseForThing.then( null, logInput );
@@ -86,7 +86,7 @@ describe('Otra promise', function(){
       expect( logInput ).toHaveBeenCalledWith( theReason );
     });
 
-    xit('llama cada error handler en el orden agregado', function(){
+    it('llama cada error handler en el orden agregado', function(){
       promiseForThing.then( null, logOops );
       promiseForThing.then( null, logInput );
       expect( log ).toEqual( [{ code: 'oops'}, {code: 'timed out'}] );
@@ -98,13 +98,13 @@ describe('Otra promise', function(){
 
     var theReason = { code: 'unauthorized' };
 
-    xit('llama a ese handler cuando es rechazado', function(){
+    it('llama a ese handler cuando es rechazado', function(){
       promiseForThing.then( null, logInput );
       promiseForThing._internalReject( theReason );
       expect( logInput ).toHaveBeenCalledWith( theReason );
     });
 
-    xit('llama a todos sus errors handlers en orden una vez cuando es rechazado', function(){
+    it('llama a todos sus errors handlers en orden una vez cuando es rechazado', function(){
       promiseForThing.then( null, logInput );
       promiseForThing.then( null, logOops );
       promiseForThing._internalReject( theReason );
@@ -181,7 +181,7 @@ describe("Un metodo `.catch`", function(){
   // que retornar aquí y arreglar `.catch` - esta vez, tomando los specs
   // del Cap 4 en cuenta.
 
-  xit('devuelve lo mismo que .then devolvería', function(){
+  it('devuelve lo mismo que .then devolvería', function(){
     var catchReturn = promise.catch( myFunc );
     var thenReturn = promise.then( null, myFunc );
     [catchReturn, thenReturn].forEach(sanitize);

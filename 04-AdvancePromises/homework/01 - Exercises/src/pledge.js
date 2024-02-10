@@ -9,6 +9,8 @@ function $Promise(executor) {
   }
 
   this._state = 'pending';
+  this._handlerGroups = [];
+  // this._handlerGroups.errorCb = [];
 
   const resolver = (value) => {
     this._internalResolve(value);
@@ -28,14 +30,78 @@ $Promise.prototype._internalResolve = function (value) {
   if (this._state === "pending") {
     this._state = 'fulfilled'
     this._value = value;
+    this._handlerGroups.forEach((han) => han.successCb(value));
   }
  }
 $Promise.prototype._internalReject = function (value) {
   if (this._state === "pending") {
     this._state = 'rejected'
     this._value = value;
+    this._handlerGroups.forEach((han) => han.errorCb(value));
   }
 };
+
+$Promise.prototype.then = function (onFulfill,onReject) {
+  if (this._state === "fulfilled") {
+     onFulfill(this._value);
+  } else if (this._state === "rejected") {
+    onReject(this._value);
+  } else if (this._state === "pending") {
+    // let auxObj = {};
+    if (typeof onFulfill === "function" && typeof onReject === "function") {
+      let auxObj = { successCb: onFulfill, errorCb: onReject };
+      this._handlerGroups.push(auxObj);
+    } else if (typeof onFulfill !== 'function') {
+      let auxObj = { successCb: false, errorCb: onReject };
+      this._handlerGroups.push(auxObj);
+      } else if (typeof onReject !== 'function') {
+      let auxObj = { successCb: onFulfill, errorCb: false };
+      this._handlerGroups.push(auxObj);
+} else if (typeof onReject !== "function") {
+      let auxObj = { successCb: onFulfill, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    } else if (typeof onFulfill !== "function" && typeof onReject !== "function") {
+      let auxObj = { successCb: false, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    } else {
+      let auxObj = { successCb: false, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    }
+  }
+}
+  
+
+$Promise.prototype.catch = function (onReject) {
+  if (this._state === "rejected") {
+    this.then(null,onReject);
+  } else if (this._state === "pending") {
+    // let auxObj = {};
+    if (typeof onFulfill === "function" && typeof onReject === "function") {
+      let auxObj = { successCb: onFulfill, errorCb: onReject };
+      this._handlerGroups.push(auxObj);
+    } else if (typeof onFulfill !== "function") {
+      let auxObj = { successCb: false, errorCb: onReject };
+      this._handlerGroups.push(auxObj);
+    } else if (typeof onReject !== "function") {
+      let auxObj = { successCb: onFulfill, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    } else if (typeof onReject !== "function") {
+      let auxObj = { successCb: onFulfill, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    } else if (
+      typeof onFulfill !== "function" &&
+      typeof onReject !== "function"
+    ) {
+      let auxObj = { successCb: false, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    } else {
+      let auxObj = { successCb: false, errorCb: false };
+      this._handlerGroups.push(auxObj);
+    }
+  }
+};
+  
+
 
 
 module.exports = $Promise;
