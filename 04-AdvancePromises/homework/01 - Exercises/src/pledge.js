@@ -49,7 +49,24 @@ $Promise.prototype.then = function (onFulfill,onReject) {
   } else if (this._state === "pending") {
     // let auxObj = {};
     if (typeof onFulfill === "function" && typeof onReject === "function") {
-      let auxObj = { successCb: onFulfill, errorCb: onReject };
+      
+      // const auxSuccessCb = () => {
+      //   if (rejectedFromLastPromise instanceof $Promise) {
+      //     rejectedFromLastPromise.then(resolver, rejector);
+      //   } else {
+      //     rejector(rejectedFromLastPromise);
+      //   }
+      // }
+      // const auxErrorCb=() => {
+      //   try {
+      //     const rejectedFromLastPromise = onReject(this.value);
+      //     rejector(rejectedFromLastPromise);
+      //   } catch (error) {
+      //     rejector(error);
+      //   }
+      // };
+
+      const auxObj = { successCb: onFulfill, errorCb: onReject };
       this._handlerGroups.push(auxObj);
     } else if (typeof onFulfill !== 'function') {
       let auxObj = { successCb: false, errorCb: onReject };
@@ -102,6 +119,42 @@ $Promise.prototype.catch = function (onReject) {
 };
   
 
+$Promise.all = (promises) => {
+  if (typeof promises !=='array') {
+    throw TypeError
+  } else {
+    return new $Promise((resolve, reject) => {
+      let counter = 0;
+      const result = [];
+      for (let i = 0; i < promises.length; i++) {
+        resolve(promises[i]).then(
+          (res) => {
+            result[i] = res;
+            counter += 1;
+            // this check need to be here, otherwise counter would remain 0 till forloop is done
+            if (counter === promises.length) {
+              resolve(result);
+            }
+          },
+          (err) => {
+            reject(err);
+          }
+        );
+      }
+    });
+  };
+};
+
+
+$Promise.resolve = function (value) {
+  if (value instanceof $Promise) {
+    return value;
+  } else {
+    return new $Promise((resolver, rejector) => {
+      resolver(value);
+    });
+  }
+};
 
 
 module.exports = $Promise;

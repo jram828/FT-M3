@@ -136,12 +136,12 @@ describe('Otra promise', function(){
 
     });
 
-    xit('puede hacer cosas con data completada', function(){
+    it('puede hacer cosas con data completada', function(){
       promiseForThing._internalResolve({ animal: 'duckling' });
       expect( ui.animals[2] ).toBe( 'duckling' );
     });
 
-    xit('puede lidear con razones del reject', function(){
+    it('puede lidear con razones del reject', function(){
       promiseForThing._internalReject({ message: 'unauthorized' });
       expect( ui.warning ).toBe( 'unauthorized' );
     });
