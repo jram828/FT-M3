@@ -113,7 +113,7 @@ describe('El método estático `$Promise.all`', function(){
   // [iterable](https://mzl.la/1SopN1G), pero esto va mas alla del
   // scope de Pledge. Nuestro `.all` solo necesita soportar arreglos.
 
-  xit('toma un solo argumento de un arreglo', function(){
+  it('toma un solo argumento de un arreglo', function(){
     // Pasando un arreglo dentro de `$Promise.all` causa ningún error.
     function callingAllWithArrays () {
       $Promise.all([]);

@@ -59,7 +59,7 @@ describe("El método .then de una promesa", function(){
     expect( promise._handlerGroups[1].errorCb   ).toBe( e2 );
   });
 
-  xit('agrega un valor falso en lugar de callbacks que no son funciones en el success o error', function(){
+  it('agrega un valor falso en lugar de callbacks que no son funciones en el success o error', function(){
     promise.then( 'a string', {} );
     expect( promise._handlerGroups[0].successCb ).toBeFalsy();
     expect( promise._handlerGroups[0].errorCb   ).toBeFalsy();

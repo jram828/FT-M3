@@ -170,7 +170,7 @@ describe("Un metodo `.catch`", function(){
   });
   function myFunc (reason) { console.log(reason); }
 
-  xit('adjunta la función pasada como un error handler', function(){
+  it('adjunta la función pasada como un error handler', function(){
     promise.catch( myFunc );
     expect( promise.then ).toHaveBeenCalledWith( null, myFunc );
   });
